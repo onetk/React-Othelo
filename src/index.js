@@ -13,28 +13,21 @@ function Square(props) {
 class Board extends React.Component {
   renderSquare(i) {
     return (
-      <Square value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />
+      <Square key={i} value={this.props.squares[i]} onClick={() => this.props.onClick(i)} />
+      // <Square key={i} value={[i]} onClick={() => this.props.onClick(i)} />
     );
   }
-
   render() {
+
+    const plateSquare = ([...Array(8).keys()]).map(row => (
+      <div className="board-row" key={row}>
+        {[...Array(8).keys()].map(col => this.renderSquare(col + row * 8))}
+      </div>
+    ));
+
     return (
       <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
+        {plateSquare}
       </div>
     );
   }
@@ -46,7 +39,7 @@ class Game extends React.Component {
     this.state = {
       history: [
         {
-          squares: Array(9).fill(null)
+          squares: Array(64).fill(null)
         }
       ],
       stepNumber: 0,
@@ -128,10 +121,11 @@ function calculateWinner(squares) {
   ];
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
+    // console.log(squares)
     // oxゲーム
-    // if (squares.indexOf(null) < 0) {
-    // 五目並べ
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+    if (squares.indexOf(null) < 0) {
+      // 五目並べ
+      // if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
       return squares[a];
     }
   }
