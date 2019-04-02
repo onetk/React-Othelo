@@ -1,6 +1,14 @@
 body {
+  background-color: #404351;
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
+}
+
+.logo{
+  width:100px;
+  height:auto;
+  text-align:center;
+  margin:30px auto;
 }
 
 ol, ul {
@@ -17,20 +25,7 @@ ol, ul {
   margin-bottom: 10px;
 }
 
-.square {
-  background: #fff;
-  border: 1px solid #999;
-  float: left;
-  font-size: 24px;
-  font-weight: bold;
-  line-height: 50px;
-  height: 50px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 50px;
-}
+
 
 .square:focus {
   outline: none;
@@ -45,8 +40,134 @@ ol, ul {
   flex-direction: row;
   text-align: center;
 
+  -webkit-justify-content: center;
+  /* justify-content: center; */
+  /* -webkit-align-items: stretch; */
+  /* align-items: stretch; */
+  /* border: 1px solid #aaa; */
+
+  /* text-align: center;
+  margin: auto; */
 }
 
-.game-info {
-  margin-left: 20px;
+.game-board{
+  box-shadow: 5px 5px 5px  rgba(0, 0, 0, 0.4);
+  margin-bottom: 10px;
+}
+
+.game-status{
+  margin: 0px 0px 10px 10px;
+}
+
+.btn-size{
+  height: 12px;
+  padding: 0px 2px;
+  margin: -2px 0px 0px 0px;
+  border-radius: 2px;
+  font-size: 8px;
+  line-height: 0;
+  vertical-align:middle;
+  align-items: center;
+}
+
+@media screen and (max-width:480px){
+  /*画面幅が480pxまでの時*/
+  .square {
+    background: rgb(106, 209, 132);
+    border: 1px solid #999;
+    float: left;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: 20px;
+    height: 20px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 20px;
+  }
+  .game-move {
+    margin: 0;
+    height: 120px;
+    overflow-y:scroll;
+    width: calc(100% + 17px);
+  }
+
+  .game-info {
+    margin-left: 10px;
+
+    padding: 0;
+    width: 130px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+/* vh = viewpoint height の単位については下記参照 */
+/* http://weboook.blog22.fc2.com/blog-entry-411.html */
+}
+
+@media screen and (min-width:481px) and (max-width:781px){
+  /*画面幅が781px以上の時*/
+  .square {
+    background: rgb(106, 209, 132);
+    border: 1px solid #999;
+    float: left;
+    font-size: 20px;
+    font-weight: bold;
+    line-height: 30px;
+    height: 30px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 30px;
+  }
+  .game-move {
+    margin: 0;
+    height: 200px;
+    overflow-y:scroll;
+    width: calc(100% + 17px);
+
+  }
+  .game-info {
+    margin-left: 20px;
+
+    padding: 0;
+    width: 130px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
+}
+
+@media screen and (min-width:781px){
+  /*画面幅が781px以上の時*/
+  .square {
+    background: rgb(106, 209, 132);
+    border: 1px solid #999;
+    float: left;
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 50px;
+    height: 50px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    text-align: center;
+    width: 50px;
+  }
+  .game-move {
+    margin: 0;
+    height: 360px;
+    overflow-y:scroll;
+    width: calc(100% + 17px);
+  }
+  .game-info {
+    margin-left: 30px;
+
+    padding: 0;
+    width: 140px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+  }
+
 }
