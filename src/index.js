@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
+import { Link } from 'react-scroll';
+
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button className="square board-koma" onClick={props.onClick}>
       {props.value}
     </button>
   );
@@ -69,6 +71,23 @@ class Game extends React.Component {
     });
   }
 
+
+
+  scrollToBottom = () => {
+    const node = ReactDOM.findDOMNode(this.messagesEnd);
+    node.scrollIntoView({ behavior: "smooth" });
+  }
+
+  componentDidMount() {
+    this.scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this.scrollToBottom();
+  }
+
+
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -98,36 +117,35 @@ class Game extends React.Component {
         <div className="game-info">
           <div className="game-status">{status}</div>
           <ol className="game-move">{moves}</ol>
+
+          <div style={{ float: "left", clear: "both" }}
+            ref={(el) => { this.messagesEnd = el; }}></div>
         </div>
       </div>
     );
   }
 }
 
+
+
 // ========================================
 
 ReactDOM.render(<Game />, document.getElementById("root"));
 
 function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    // console.log(squares)
-    // oxゲーム
-    if (squares.indexOf(null) < 0) {
-      // 五目並べ
-      // if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
+
+  var results = {};
+  for (let i = 0; i < squares.length; i++) {
+    var koma = squares[i]
+    results[koma] = (results[koma] > 0) ? results[koma] + 1 : 1;
+  }
+  // console.log('○', "amount", results["○"]);
+  // console.log('●', "amount", results["●"]);
+  // oxゲーム
+  if (squares.indexOf(null) < 0) {
+    var winner_side = (results[koma] === 32) ? ('draw') :
+      ((results['●'] > 32) ? '●' : '○');
+    return winner_side;
   }
   return null;
 }

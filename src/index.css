@@ -1,5 +1,6 @@
 body {
-  background-color: #404351;
+  background-color: #343641;
+  /* background-color: #fff; */
   font: 14px "Century Gothic", Futura, sans-serif;
   margin: 20px;
 }
@@ -51,12 +52,17 @@ ol, ul {
 }
 
 .game-board{
-  box-shadow: 5px 5px 5px  rgba(0, 0, 0, 0.4);
+  box-shadow: 5px 5px 5px  rgba(0,0,0, 0.8);
   margin-bottom: 10px;
+}
+
+.board-koma{
+  text-shadow: black 1px 1px 2px;
 }
 
 .game-status{
   margin: 0px 0px 10px 10px;
+  color: #eee;
 }
 
 .btn-size{

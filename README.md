@@ -4,8 +4,9 @@
     - [Tutorial: Intro To React](https://reactjs.org/tutorial/tutorial.html)
     - [Reactチュートリアル: Intro To React【日本語翻訳】](https://mae.chab.in/archives/2943)
     - [React チュートリアル 日本語翻訳](http://better-than-i-was-yesterday.com/react-tutorial-japanese/)
-
-### 引っかかりポイント
+<br><br><br>
+---
+#### 引っかかりポイント
   - renderのjsx部分でmapを使ってループで定義した部分がunique key 警告
     - 繰り返し内で描画されるオブジェクトの区別がつかなくなり，差分レンダリングができなくなる
     - Unique key をmap等に明示的に指定することで回避
