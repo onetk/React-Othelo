@@ -60,7 +60,7 @@ class Game extends React.Component {
     // player turn
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
-    const squares = current.squares.slice();
+    var squares = current.squares.slice();
 
     if (calculateWinner(squares) || squares[i]) {
       return;
@@ -76,16 +76,13 @@ class Game extends React.Component {
     } else {
       //  盤上の計算を行ったものを代入する形
       this.setState({
-        history: history.concat([{ squares: npcPlayer(squaresChenge) }]),
+        history: history.concat([{ squares: squaresChenge }]),
         stepNumber: history.length,
         xIsNext: this.state.xIsNext
       });
 
-      // this.setState({
-      //   history: history.concat([{ squares: npcPlayer(squaresChenge) }]),
-      //   // stepNumber: history.length,
-      //   xIsNext: this.state.xIsNext
-      // });
+      // npc turn
+      squares = calculateNPC(squaresChenge)
 
     }
   }
@@ -93,7 +90,8 @@ class Game extends React.Component {
   jumpTo(step) {
     this.setState({
       stepNumber: step,
-      xIsNext: (step % 2) === 0
+      xIsNext: true
+      // xIsNext: (step % 2) === 0
     });
   }
 
@@ -259,7 +257,7 @@ function calculateTable(squares, thisTime) {
 
 }
 
-function npcPlayer(squares) {
-  squares[0] = "○"
+function calculateNPC(squares) {
+  squares[Math.floor(Math.random() * (63 + 1 - 0)) + 0] = "○"
   return squares
 }
