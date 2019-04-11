@@ -56,8 +56,21 @@ ol, ul {
   margin-bottom: 10px;
 }
 
-.board-koma{
+.board-koma-white{
   text-shadow: black 1px 1px 2px;
+  color: #ddd
+}
+.board-koma-black{
+  text-shadow: black 1px 1px 2px;
+  color: #222
+}
+
+.whiter{
+  color: #ddd
+}
+
+.blacker{
+  color: #222
 }
 
 .game-status{
