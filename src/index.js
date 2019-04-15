@@ -8,8 +8,8 @@ function Square(props) {
   return (
     <button className="square board-koma-white" onClick={props.onClick}>
       {props.value === null ? <span>{null}</span> :
-        (props.value === "●" ? <span className="whiter">{"●"}</span> :
-          <span className="blacker">{"●"}</span>)}
+        (props.value === "●" ? <span className="blacker">{"●"}</span> :
+          <span className="whiter">{"●"}</span>)}
     </button >
   );
 }
@@ -60,29 +60,36 @@ class Game extends React.Component {
     // player turn
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
-    var squares = current.squares.slice();
+    const squares = current.squares.slice();
 
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
 
     squares[i] = this.state.xIsNext ? "●" : "○";
-    const squaresChenge = calculateTable(squares, i);
-    const changeNum = squaresChenge.filter((v, i) => squares[i] !== v).length;
-    console.log(changeNum);
+    var squaresChange = calculateTable(squares, i);
+    const changeNum = squaresChange.filter((v, i) => squares[i] !== v).length;
 
-    if (JSON.stringify(squares) === JSON.stringify(squaresChenge)) {
+    if (JSON.stringify(squares) === JSON.stringify(squaresChange)) {
       squares[i] = null
     } else {
       //  盤上の計算を行ったものを代入する形
       this.setState({
-        history: history.concat([{ squares: squaresChenge }]),
+        history: history.concat([{ squares: squaresChange }]),
         stepNumber: history.length,
         xIsNext: this.state.xIsNext
       });
 
       // npc turn
-      squares = calculateNPC(squaresChenge)
+      const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+      (async () => {
+        console.log('スタート');
+        await sleep(1000);
+        this.setState({
+          history: history.concat([{ squares: calculateNPC(squaresChange) }]),
+        });
+      })();
+
 
     }
   }
@@ -111,12 +118,10 @@ class Game extends React.Component {
     });
 
     let status;
-    let turns;
     if (winner) {
       status = "Winner: " + winner;
     } else {
       status = "Next player: ";
-      turns = this.state.xIsNext ? "●" : "○";
     }
 
     return (
@@ -126,7 +131,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
 
-          <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>}</div>
+          <div className="game-status">{status}{this.state.xIsNext ? <span className="blacker">{"●"}</span> : <span className="whiter">{"●"}</span>}</div>
           <ol className="game-move">{moves}</ol>
 
         </div>
@@ -157,15 +162,15 @@ function calculateWinner(squares) {
   return null;
 }
 
-function calculateTable(squares, thisTime) {
+function calculateTable(squaresCalc, thisTime) {
 
-  var table = squares.slice();
+  var table = squaresCalc.slice();
 
   // left part
   for (var left = 1; left <= thisTime % 8; left++) {
-    if (table[thisTime - left] === squares[thisTime]) {
+    if (table[thisTime - left] === squaresCalc[thisTime]) {
       for (let i = 1; i < left; i++) {
-        table[thisTime - i] = squares[thisTime];
+        table[thisTime - i] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime - left] === null) {
@@ -174,9 +179,9 @@ function calculateTable(squares, thisTime) {
   }
   //  right part
   for (var right = 1; right <= 8 - (thisTime % 8); right++) {
-    if (table[thisTime + right] === squares[thisTime]) {
+    if (table[thisTime + right] === squaresCalc[thisTime]) {
       for (let i = 1; i < right; i++) {
-        table[thisTime + i] = squares[thisTime];
+        table[thisTime + i] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime + right] === null) {
@@ -185,9 +190,9 @@ function calculateTable(squares, thisTime) {
   }
   //  upper part
   for (var upper = 1; upper <= thisTime / 8; upper++) {
-    if (table[thisTime - upper * 8] === squares[thisTime]) {
+    if (table[thisTime - upper * 8] === squaresCalc[thisTime]) {
       for (let i = 1; i < upper; i++) {
-        table[thisTime - i * 8] = squares[thisTime];
+        table[thisTime - i * 8] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime - upper * 8] === null) {
@@ -196,9 +201,9 @@ function calculateTable(squares, thisTime) {
   }
   //  downer part
   for (var downer = 1; downer <= 8 - (thisTime / 8); downer++) {
-    if (table[thisTime + downer * 8] === squares[thisTime]) {
+    if (table[thisTime + downer * 8] === squaresCalc[thisTime]) {
       for (let i = 1; i < downer; i++) {
-        table[thisTime + i * 8] = squares[thisTime];
+        table[thisTime + i * 8] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime + downer * 8] === null) {
@@ -208,9 +213,9 @@ function calculateTable(squares, thisTime) {
 
   //  upper right part
   for (var upperR = 1; upperR <= thisTime / 7; upperR++) {
-    if (table[thisTime - upperR * 7] === squares[thisTime]) {
+    if (table[thisTime - upperR * 7] === squaresCalc[thisTime]) {
       for (let i = 1; i < upperR; i++) {
-        table[thisTime - i * 7] = squares[thisTime];
+        table[thisTime - i * 7] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime - upperR * 7] === null) {
@@ -220,9 +225,9 @@ function calculateTable(squares, thisTime) {
 
   //  downer right part
   for (var downerL = 1; downerL <= 8 - (thisTime / 9); downerL++) {
-    if (table[thisTime + downerL * 9] === squares[thisTime]) {
+    if (table[thisTime + downerL * 9] === squaresCalc[thisTime]) {
       for (let i = 1; i < downerL; i++) {
-        table[thisTime + i * 9] = squares[thisTime];
+        table[thisTime + i * 9] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime + downerL * 9] === null) {
@@ -232,9 +237,9 @@ function calculateTable(squares, thisTime) {
 
   //  upper left part
   for (var upperL = 1; upperL <= thisTime / 9; upperL++) {
-    if (table[thisTime - upperL * 9] === squares[thisTime]) {
+    if (table[thisTime - upperL * 9] === squaresCalc[thisTime]) {
       for (let i = 1; i < upperL; i++) {
-        table[thisTime - i * 9] = squares[thisTime];
+        table[thisTime - i * 9] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime - upperL * 9] === null) {
@@ -243,9 +248,9 @@ function calculateTable(squares, thisTime) {
   }
   //  downer left part
   for (var downerR = 1; downerR <= 8 - (thisTime / 7); downerR++) {
-    if (table[thisTime + downerR * 7] === squares[thisTime]) {
+    if (table[thisTime + downerR * 7] === squaresCalc[thisTime]) {
       for (let i = 1; i < downerR; i++) {
-        table[thisTime + i * 7] = squares[thisTime];
+        table[thisTime + i * 7] = squaresCalc[thisTime];
       }
       break;
     } else if (table[thisTime + downerR * 7] === null) {
@@ -257,7 +262,31 @@ function calculateTable(squares, thisTime) {
 
 }
 
-function calculateNPC(squares) {
-  squares[Math.floor(Math.random() * (63 + 1 - 0)) + 0] = "○"
-  return squares
+function calculateNPC(squaresChange) {
+  var tables = squaresChange;
+  var calcs = Array(64).fill(null)
+
+  squaresChange.forEach(function (value, index) {
+    if (squaresChange[index] == null) {
+      squaresChange[index] = "○";
+      calcs[index] = calculateTable(squaresChange, index).filter((v, i) => squaresChange[i] !== v).length
+      squaresChange[index] = null;
+
+    }
+    // console.log(index, value, calcs[index])
+  });
+  var max_list = calcs.reduce((arr, val, i) => (val === Math.max.apply(null, calcs) && arr.push(i), arr), []);
+
+  var choise = Math.floor(Math.random() * (max_list.length));
+  // console.log(max_list, max_list[choise]);
+
+  // console.log(tables)
+  tables[max_list[choise]] = "○";
+  // console.log(squaresChange);
+  // console.log(calculateTable(squaresChange, max_list[choise]).filter((v, i) => squaresChange[i] !== v).length)
+  tables = calculateTable(squaresChange, max_list[choise]);
+  // console.log(tables)
+  // console.log(calculateTable(squaresChange, max_list[choise]));
+  // console.log(squaresChange);
+  return tables
 }
