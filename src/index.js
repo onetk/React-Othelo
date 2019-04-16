@@ -94,16 +94,6 @@ class Game extends React.Component {
         })();
       } while (calculatePlayer(squares).length === 0)
 
-      // const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-      // (async () => {
-      //   console.log('スタート');
-      //   await sleep(1000);
-      //   this.setState({
-      //     history: history.concat([{ squares: calculateNPC(squaresChange) }]),
-      //   });
-      // })();
-
-
     }
   }
 
@@ -144,7 +134,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
 
-          <div className="game-status">{status}{this.state.xIsNext ? <span className="blacker">{"●"}</span> : <span className="whiter">{"●"}</span>}</div>
+          <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>}</div>
           <ol className="game-move">{moves}</ol>
 
         </div>
