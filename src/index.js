@@ -66,24 +66,23 @@ class Game extends React.Component {
     if (calculateWinner(squares) || squares[i]) {
       return;
     }
+    if (calculatePlayer(squares).length !== 0) {
+      squares[i] = this.state.xIsNext ? "●" : "○";
+      const squaresChange = calculateTable(squares, i);
+      // const changeNum = squaresChange.filter((v, i) => squares[i] !== v).length;
 
-    squares[i] = this.state.xIsNext ? "●" : "○";
-    const squaresChange = calculateTable(squares, i);
-    // const changeNum = squaresChange.filter((v, i) => squares[i] !== v).length;
+      if (JSON.stringify(squares) === JSON.stringify(squaresChange)) {
+        squares[i] = null
+      } else {
+        //  盤上の計算を行ったものを代入する形
+        this.setState({
+          history: history.concat([{ squares: squaresChange }]),
+          stepNumber: history.length,
+          xIsNext: this.state.xIsNext
+        });
 
-    if (JSON.stringify(squares) === JSON.stringify(squaresChange)) {
-      squares[i] = null
-    } else {
-      //  盤上の計算を行ったものを代入する形
-      this.setState({
-        history: history.concat([{ squares: squaresChange }]),
-        stepNumber: history.length,
-        xIsNext: this.state.xIsNext
-      });
-
-      // npc turn
-      // Playerサイドの打つ手の0かの判定
-      do {
+        // npc turn
+        // Playerサイドの打つ手の0かの判定
         const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         (async () => {
           console.log('スタート');
@@ -92,8 +91,19 @@ class Game extends React.Component {
             history: history.concat([{ squares: calculateNPC(squaresChange) }]),
           });
         })();
-      } while (calculatePlayer(squares).length === 0)
 
+      }
+    } else {
+      if (calculateNPC(squares) !== squares) {
+        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
+        (async () => {
+          console.log('スタート');
+          await sleep(1000);
+          this.setState({
+            history: history.concat([{ squares: calculateNPC(squares) }]),
+          });
+        })();
+      }
     }
   }
 
@@ -127,6 +137,13 @@ class Game extends React.Component {
       status = "Next player: ";
     }
 
+    const squares = current.squares.slice()
+    var results = {};
+    for (let i = 0; i < squares.length; i++) {
+      var koma = squares[i]
+      results[koma] = (results[koma] > 0) ? results[koma] + 1 : 1;
+    }
+
     return (
       <div className="game">
         <div className="game-board">
@@ -134,7 +151,7 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
 
-          <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>}</div>
+          <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>} <br></br> {results["●"]}-{results["○"]}</div>
           <ol className="game-move">{moves}</ol>
 
         </div>
