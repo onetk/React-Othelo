@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { Component } from 'react'
+import ReactPlayer from 'react-player'
 import ReactDOM from 'react-dom';
 import './index.css';
 // import { Link } from 'react-scroll';
@@ -52,7 +53,8 @@ class Game extends React.Component {
         }
       ],
       stepNumber: 0,
-      xIsNext: true
+      xIsNext: true,
+      display: true
     };
   }
 
@@ -67,6 +69,7 @@ class Game extends React.Component {
       return;
     }
     if (calculatePlayer(squares).length !== 0) {
+      console.log(calculatePlayer(squares));
       squares[i] = this.state.xIsNext ? "●" : "○";
       const squaresChange = calculateTable(squares, i);
       // const changeNum = squaresChange.filter((v, i) => squares[i] !== v).length;
@@ -115,6 +118,40 @@ class Game extends React.Component {
     });
   }
 
+  state = {
+    url: '//download.blender.org/durian/trailer/sintel_trailer-480p.mp4',
+    playing: true,
+    muted: true,
+    playbackRate: 1.0,
+    loop: false
+  }
+
+
+  onPlay = () => {
+    console.log('onPlay')
+    this.setState({ playing: true })
+  }
+
+  onPause = () => {
+    console.log('onPause')
+    this.setState({ playing: false })
+  }
+  onProgress = state => {
+    console.log('onProgress', state)
+    // We only want to update time slider if we are not currently seeking
+    if (!this.state.seeking) {
+      this.setState(state)
+    }
+  }
+  onEnded = () => {
+    console.log('onEnded')
+    this.setState({ playing: this.state.loop });
+    this.setState({ display: false });
+  }
+  onDuration = (duration) => {
+    console.log('onDuration', duration)
+    this.setState({ duration });
+  }
 
   render() {
     const history = this.state.history;
@@ -133,6 +170,26 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = "Winner: ";
+      var video =
+        <ReactPlayer
+          controls
+          url="youWin.mp4"
+          playing={true}
+          loop={false}
+          playbackRate={1.0}
+          muted={false}
+          onReady={() => console.log('onReady')}
+          onStart={() => console.log('onStart')}
+          onPlay={this.onPlay}
+          onPause={this.onPause}
+          onBuffer={() => console.log('onBuffer')}
+          onSeek={e => console.log('onSeek', e)}
+          onEnded={this.onEnded}
+          onError={e => console.log('onError', e)}
+          onProgress={this.onProgress}
+          onDuration={this.onDuration}
+        />
+
     } else {
       status = "Next player: ";
     }
@@ -145,17 +202,18 @@ class Game extends React.Component {
     }
 
     return (
-      <div className="game">
-        <div className="game-board">
-          <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+      <section>
+        <div className="game">
+          <div className="game-board">
+            <Board squares={current.squares} onClick={i => this.handleClick(i)} />
+          </div>
+          <div className="game-info">
+            <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>} <br></br> {results["●"]}-{results["○"]}</div>
+            <ol className="game-move">{moves}</ol>
+          </div>
         </div>
-        <div className="game-info">
-
-          <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>} <br></br> {results["●"]}-{results["○"]}</div>
-          <ol className="game-move">{moves}</ol>
-
-        </div>
-      </div>
+        {this.state.display ? video : null}
+      </section>
     );
   }
 }
@@ -221,7 +279,7 @@ function calculateTable(squaresCalc, thisTime) {
     }
   }
   //  downer part
-  for (var downer = 1; downer <= 7 - (thisTime / 8); downer++) {
+  for (var downer = 1; downer <= 8 - (thisTime / 8); downer++) {
     if (table[thisTime + downer * 8] === squaresCalc[thisTime]) {
       for (let i = 1; i < downer; i++) {
         table[thisTime + i * 8] = squaresCalc[thisTime];

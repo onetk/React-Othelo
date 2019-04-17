@@ -2,7 +2,7 @@ body {
   background-color: #343641;
   /* background-color: #fff; */
   font: 14px "Century Gothic", Futura, sans-serif;
-  margin: 20px;
+  margin: 20px 0px;
 }
 
 .logo{
@@ -189,4 +189,15 @@ ol, ul {
     overflow-y: hidden;
   }
 
+}
+
+
+video{
+  position: absolute;
+  margin: 0px;
+  padding:0px;
+  top:0;
+  min-width: 100%;
+  min-height: 100vh;
+  z-index: 1;
 }
