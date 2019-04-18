@@ -69,7 +69,7 @@ class Game extends React.Component {
       return;
     }
     if (calculatePlayer(squares).length !== 0) {
-      console.log(calculatePlayer(squares));
+      // console.log(calculatePlayer(squares));
       squares[i] = this.state.xIsNext ? "●" : "○";
       const squaresChange = calculateTable(squares, i);
       // const changeNum = squaresChange.filter((v, i) => squares[i] !== v).length;
@@ -88,7 +88,6 @@ class Game extends React.Component {
         // Playerサイドの打つ手の0かの判定
         const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         (async () => {
-          console.log('スタート');
           await sleep(1000);
           this.setState({
             history: history.concat([{ squares: calculateNPC(squaresChange) }]),
@@ -100,7 +99,6 @@ class Game extends React.Component {
       if (calculateNPC(squares) !== squares) {
         const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         (async () => {
-          console.log('スタート');
           await sleep(1000);
           this.setState({
             history: history.concat([{ squares: calculateNPC(squares) }]),
@@ -167,13 +165,16 @@ class Game extends React.Component {
       );
     });
 
+    const url = (winner === "●") ? "youWin.mp4" : "youLose.mp4";
     let status;
+
     if (winner) {
       status = "Winner: ";
+      console.log("video prepare")
       var video =
         <ReactPlayer
           controls
-          url="youWin.mp4"
+          url={url}
           playing={true}
           loop={false}
           playbackRate={1.0}
@@ -208,7 +209,13 @@ class Game extends React.Component {
             <Board squares={current.squares} onClick={i => this.handleClick(i)} />
           </div>
           <div className="game-info">
-            <div className="game-status">{status}{this.state.xIsNext ? <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>} <br></br> {results["●"]}-{results["○"]}</div>
+            <div className="game-status">{status}
+              {winner === null ?
+                (this.state.xIsNext ?
+                  <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>) :
+                (winner === "●" ?
+                  <span className="whiter">{"●"}</span> : <span className="blacker">{"●"}</span>)}
+              <br></br> {results["●"]}-{results["○"]}</div>
             <ol className="game-move">{moves}</ol>
           </div>
         </div>
@@ -236,6 +243,7 @@ function calculateWinner(squares) {
   if (squares.indexOf(null) < 0) {
     var winner_side = (results[koma] === 32) ? ('draw') :
       ((results['●'] > 32) ? '●' : '○');
+    console.log(winner_side);
     return winner_side;
   }
   return null;
@@ -353,6 +361,8 @@ function calculatePlayer(squares) {
       squaresPlayerCalc[index] = null;
     }
   });
+  // console.log(calcs);
+
   var max_list = calcs.reduce((arr, val, i) => (val === Math.max.apply(null, calcs) && arr.push(i), arr), []);
   // console.log(max_list);
   return max_list;
