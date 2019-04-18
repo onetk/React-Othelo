@@ -165,7 +165,8 @@ class Game extends React.Component {
       );
     });
 
-    const url = (winner === "●") ? "youWin.mp4" : "youLose.mp4";
+    const url = (winner === "●") ?
+      "https://res.cloudinary.com/onetk/video/upload/v1555556016/youWin.mp4" : "https://res.cloudinary.com/onetk/video/upload/v1555556013/youLose.mp4";
     let status;
 
     if (winner) {
