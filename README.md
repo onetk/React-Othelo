@@ -1,5 +1,11 @@
 ## オセロ!
-  - Refer to React tutorial
+  - React tutorialの３目並べを拡張してオセロにしました
+  - URL: https://othelo.herokuapp.com/
+
+<div align="center">
+<img src="https://media.giphy.com/media/ZFpEqele28YBbYqTqz/giphy.gif" width="500">
+</div>
+
   - 参考
     - [Tutorial: Intro To React](https://reactjs.org/tutorial/tutorial.html)
     - [Reactチュートリアル: Intro To React【日本語翻訳】](https://mae.chab.in/archives/2943)
